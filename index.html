@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le TOA MEMBERS</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ル・トーア">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#2A241C">
+<!--
+  【試作版】オープンキャンパス参加者メンバーサイト
+  ・ログインは見た目だけの仮の仕組みです（本番では外部のログイン機能を使う）
+  ・試し用ID：LT-0001 / パスワード：toa2027 （ほか LT-0002 も同じパスワード）
+  ・スタンプや作品記録は、このパソコン・スマホの中にだけ保存されます
+-->
+<style>
+:root{
+  --bg:#f7f4ef; --card:#ffffff; --ink:#1f1b16; --sub:#6b6259; --line:#e4ddd2;
+  --accent:#b08a4a; --accent-ink:#ffffff; --soft:#f1e8d8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16130f; --card:#211d18; --ink:#f3ede4; --sub:#b3a898; --line:#3a332b;
+    --accent:#d2ad6c; --accent-ink:#1a160f; --soft:#2c261e;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16130f; --card:#211d18; --ink:#f3ede4; --sub:#b3a898; --line:#3a332b;
+  --accent:#d2ad6c; --accent-ink:#1a160f; --soft:#2c261e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+header{padding:28px 0 8px;text-align:center}
+.logo{font-family:"Didot","Times New Roman",serif;letter-spacing:.25em;font-size:22px}
+.logo small{display:block;font-size:11px;letter-spacing:.4em;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+h2{font-size:17px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:4px;height:18px;background:var(--accent);border-radius:2px}
+.muted{color:var(--sub);font-size:13px}
+input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);color:var(--ink);font-size:16px;font-family:inherit}
+button{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;
+  padding:12px 18px;font-size:15px;font-weight:bold;cursor:pointer;font-family:inherit}
+button.ghost{background:transparent;color:var(--sub);border:1px solid var(--line);font-weight:normal;padding:6px 12px;font-size:13px}
+label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
+.err{color:#c0392b;font-size:13px;min-height:1.2em}
+.hidden{display:none}
+/* 会員証 */
+.member{background:linear-gradient(135deg,#2a241c,#4a3d2a);color:#f6eedf;border:0;position:relative;overflow:hidden}
+.member::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(210,173,108,.4)}
+.member .no{font-family:monospace;letter-spacing:.15em;color:#d2ad6c}
+.member .name{font-size:22px;margin:6px 0}
+.member .rank{display:inline-block;border:1px solid #d2ad6c;color:#d2ad6c;border-radius:20px;padding:2px 12px;font-size:12px}
+/* スタンプ */
+.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.stamp{aspect-ratio:1;border:2px dashed var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--sub);text-align:center}
+.stamp.on{border:2px solid var(--accent);background:var(--soft);color:var(--accent);font-weight:bold}
+/* 動画 */
+.videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.video{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.thumb{aspect-ratio:16/9;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--accent)}
+.video p{margin:0;padding:8px 10px;font-size:13px}
+.lock{opacity:.5}
+/* メッセージ・イベント */
+.msg{border-left:3px solid var(--accent);padding:4px 12px;margin:12px 0}
+.msg .from{font-size:12px;color:var(--sub)}
+.event{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.event:last-child{border:0}
+.date{min-width:56px;text-align:center;background:var(--soft);border-radius:8px;padding:4px;font-size:12px;color:var(--accent);font-weight:bold}
+.badge{font-size:11px;background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:1px 6px;margin-left:4px}
+/* 作品記録 */
+.works{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
+.work{border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:12px}
+.work img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.work div{padding:6px 8px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:4px 0;position:sticky;top:0;background:var(--bg);z-index:5}
+nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:4px 12px}
+.note{font-size:12px;color:var(--sub);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo"><small>MEMBERS ONLY</small>Le TOA MEMBERS</div>
+  </header>
+
+  <!-- ログイン画面 -->
+  <section id="login" class="card">
+    <h2>メンバーログイン</h2>
+    <p class="muted">オープンキャンパスでお渡しした「メンバーカード」に書かれているIDとパスワードを入力してください。</p>
+    <label for="uid">メンバーID</label>
+    <input id="uid" placeholder="例：LT-0001" autocomplete="username">
+    <label for="pw">パスワード</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <p class="err" id="err"></p>
+    <button id="loginBtn" style="width:100%">ログイン</button>
+  </section>
+
+  <!-- メンバーページ -->
+  <main id="home" class="hidden">
+    <!-- ホーム画面に追加の案内（追加済み・閉じた場合は出さない） -->
+    <section id="a2hs" class="card hidden"><div style="display:flex;gap:12px;align-items:flex-start">
+      <img src="apple-touch-icon.png" alt="" width="48" height="48" style="border-radius:10px;flex:none">
+      <div style="flex:1">
+        <b>会員証をホーム画面に置こう</b>
+        <p class="muted" id="a2hsHow" style="margin:4px 0 8px"></p>
+        <button id="a2hsBtn" class="hidden" style="padding:6px 14px;font-size:13px">ホーム画面に追加</button>
+        <button class="ghost" id="a2hsClose">閉じる</button>
+      </div>
+    </div></section>
+
+    <nav>
+      <a href="#s-card">会員証</a><a href="#s-stamp">スタンプ</a><a href="#s-video">限定動画</a>
+      <a href="#s-msg">メッセージ</a><a href="#s-event">先行案内</a><a href="#s-special">限定イベント</a><a href="#s-works">作品記録</a>
+    </nav>
+
+    <!-- ① 名前で迎えるマイページ -->
+    <section id="s-card" class="card member">
+      <div class="muted" style="color:#cbbfa9" id="greet"></div>
+      <div class="name" id="mname"></div>
+      <div class="no" id="mno"></div>
+      <p style="margin:10px 0 0"><span class="rank" id="mrank"></span></p>
+      <p style="font-size:12px;color:#cbbfa9;margin:12px 0 0">あなたは、ル・トーアが迎えるメンバーの一人です。</p>
+    </section>
+
+    <!-- ② 来校スタンプ -->
+    <section id="s-stamp" class="card">
+      <h2>来校スタンプ</h2>
+      <p class="muted">オープンキャンパスや学校行事に来るたびにスタンプが増え、ランクが上がります。</p>
+      <div class="stamps" id="stamps"></div>
+      <p class="muted" id="nextRank" style="margin-top:10px"></p>
+      <p class="muted" style="margin-top:12px">📷 スタンプのもらい方：オープンキャンパスの最後に担当の先生が見せるQRコードを、スマホのカメラで読み取ってください。QRコードはその場でしか使えません。</p>
+      <p class="err" id="codeErr" style="font-weight:bold"></p>
+    </section>
+
+    <!-- ③ 限定動画 -->
+    <section id="s-video" class="card">
+      <h2>メンバー限定動画</h2>
+      <div class="videos" id="videos"></div>
+      <p class="muted">鍵マークの動画は、スタンプを集めると見られるようになります。</p>
+    </section>
+
+    <!-- ④ 先生・在校生からのメッセージ -->
+    <section id="s-msg" class="card">
+      <h2>今月のメッセージ</h2>
+      <div class="msg"><div class="from">担任の先生より（10月）</div>
+        <p style="margin:4px 0">秋は文化祭や進路決めで忙しい時期ですね。焦らなくて大丈夫。オープンキャンパスで会えたことが、もう一歩目です。</p></div>
+      <div class="msg"><div class="from">美容科2年・在校生より</div>
+        <p style="margin:4px 0">私も高3の秋は不安でいっぱいでした。いまはサロンの内定をもらって、毎日ワクワクしています。次のオープンキャンパスでは、ぜひ話しかけてください！</p></div>
+    </section>
+
+    <!-- ⑤ 学校行事の先行案内 -->
+    <section id="s-event" class="card">
+      <h2>イベント先行案内</h2>
+      <div id="events"></div>
+    </section>
+
+    <!-- ⑦ 登録者だけが参加できる特別イベント -->
+    <section id="s-special" class="card">
+      <h2>メンバー限定 特別イベント</h2>
+      <p class="muted">このイベントは、Le TOA MEMBERS に登録した人だけが参加できます。</p>
+      <div id="specials"></div>
+    </section>
+
+    <!-- ⑥ 作品記録 -->
+    <section id="s-works" class="card">
+      <h2>わたしの作品記録</h2>
+      <p class="muted">体験授業で作った作品の写真を残しておけます。入学後に見返すと、自分の成長がわかります。</p>
+      <label for="wfile">写真</label>
+      <input id="wfile" type="file" accept="image/*">
+      <label for="wmemo">ひとこと</label>
+      <input id="wmemo" placeholder="例：初めてのワインディング！">
+      <p style="margin-top:10px"><button id="wBtn">記録する</button></p>
+      <div class="works" id="works"></div>
+    </section>
+
+    <p style="text-align:center"><button class="ghost" id="logout">ログアウト</button></p>
+
+    <!-- 試作確認用：職員がクロージングで見せるQR画面（本番では職員用ページに分ける） -->
+    <section class="card" style="border:2px dashed var(--accent)">
+      <h2>【試作確認用】職員がクロージングで見せる画面</h2>
+      <p class="muted" id="qrInfo"></p>
+      <div id="qrBox" style="display:flex;justify-content:center;padding:12px;background:#fff;border-radius:8px"></div>
+      <p class="muted">パソコンでは自分の画面のQRを読めないため、下のボタンで「読み取った」ことにして試せます。</p>
+      <p><button id="qrTest">このQRを読み取ったことにする</button>
+         <button class="ghost" id="qrOld">有効時間外のQRを試す</button></p>
+      <p class="muted">提示し忘れたときは、職員が名簿の表の「来校」欄に入力すれば、次にページを開いたときにスタンプが増えます。</p>
+    </section>
+  </main>
+
+  <p class="note">【試作版】掲載内容はすべて仮のものです。<br>ル・トーア東亜美容専門学校</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU" crossorigin="anonymous"></script>
+<script>
+// ===== 試作用の仮データ（本番ではここを管理用の表から読み込む） =====
+const MEMBERS = {
+  "LT-0001": {pw:"toa2027", name:"山田 花子", visits:2},
+  "LT-0002": {pw:"toa2027", name:"佐藤 結衣", visits:4}
+};
+// ===== 来校スタンプ用のQR（本番では「イベント表」に 日付・有効時間・QR番号 を1行ずつ書く） =====
+// 試作では、いま開いている時刻の前後30分を「クロージング中」とみなす
+const now0 = new Date(), ymd = d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+const OC_EVENTS = [
+  {code:"OC"+ymd(now0)+"A", name:"本日のオープンキャンパス", from:new Date(now0-30*60000), to:new Date(+now0+30*60000)},
+  {code:"OC20260920A", name:"9/20 オープンキャンパス", from:new Date("2026-09-20T15:00:00"), to:new Date("2026-09-20T16:00:00")}
+];
+const hm = d=>`${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
+const RANKS = [[1,"BRONZE"],[3,"SILVER"],[5,"GOLD"]];
+const VIDEOS = [
+  {t:"受賞卒業生メッセージ①（サロンオーナー）", need:1, icon:"▶"},
+  {t:"受賞卒業生メッセージ②（トップスタイリスト）", need:1, icon:"▶"},
+  {t:"授業の舞台裏：コンテスト前日の教室", need:3, icon:"▶"},
+  {t:"先生の本気カット 1本まるごと", need:5, icon:"▶"}
+];
+const EVENTS = [
+  {d:"11/8", t:"Le TOA FESTIVAL メンバー見学席のご案内", tag:"メンバー先行"},
+  {d:"11/22", t:"オープンキャンパス「メイク特集」 先行予約", tag:"メンバー先行"},
+  {d:"12/13", t:"在校生と話そう！クリスマス座談会", tag:"メンバー限定"}
+];
+
+const SPECIALS = [
+  {id:"sp1", d:"12/20(土)", t:"メンバー限定ヘアアレンジ教室", body:"先生が少人数で教えるアレンジ講座。作った作品はそのまま作品記録へ。", cap:"定員20名"},
+  {id:"sp2", d:"1/24(土)", t:"受賞卒業生のサロン見学ツアー", body:"活躍中の卒業生のサロンを訪ねて、プロの現場を見学します。", cap:"定員15名"},
+  {id:"sp3", d:"3/14(土)", t:"入学前メンバー交流会", body:"同じ春に入学する仲間や先輩と、ひと足先に顔を合わせる会です。", cap:"定員40名"}
+];
+
+// ===== 保存（この端末の中だけ） =====
+// 保存できない環境では、ページを開いている間だけ覚えておく
+const mem = {};
+const store = {
+  get(k,def){ try{ const v=localStorage.getItem(k); if(v) return JSON.parse(v) }catch(e){} return k in mem ? mem[k] : def },
+  set(k,v){ mem[k]=v; try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} return true }
+};
+const $ = id => document.getElementById(id);
+let me = null;
+
+function login(id){
+  me = {id, ...MEMBERS[id]};
+  const extra = store.get("visits_"+id, 0);
+  me.visits += extra;
+  store.set("session", id);
+  $("login").classList.add("hidden");
+  $("home").classList.remove("hidden");
+  render();
+}
+function rankOf(v){ let r="MEMBER"; RANKS.forEach(([n,name])=>{ if(v>=n) r=name }); return r }
+
+function render(){
+  const h = new Date().getHours();
+  $("greet").textContent = (h<11?"おはようございます":h<18?"こんにちは":"こんばんは")+"、おかえりなさい";
+  $("mname").textContent = me.name+" さん";
+  $("mno").textContent = "No. "+me.id;
+  $("mrank").textContent = rankOf(me.visits)+" MEMBER";
+  // スタンプ
+  $("stamps").innerHTML = Array.from({length:10},(_,i)=>
+    `<div class="stamp ${i<me.visits?"on":""}">${i<me.visits?"TOA<br>★":(i+1)}</div>`).join("");
+  const next = RANKS.find(([n])=>n>me.visits);
+  $("nextRank").textContent = next ? `あと${next[0]-me.visits}回で ${next[1]} ランク！` : "最高ランクです。ありがとう！";
+  // 動画
+  $("videos").innerHTML = VIDEOS.map(v=>{
+    const open = me.visits>=v.need;
+    return `<div class="video ${open?"":"lock"}"><div class="thumb">${open?v.icon:"🔒"}</div>
+      <p>${v.t}${open?"":`<br><span class="muted">スタンプ${v.need}個で公開</span>`}</p></div>`;
+  }).join("");
+  // イベント
+  $("events").innerHTML = EVENTS.map(e=>
+    `<div class="event"><div class="date">${e.d}</div><div>${e.t}<span class="badge">${e.tag}</span></div></div>`).join("");
+  renderSpecials();
+  renderWorks();
+}
+function renderSpecials(){
+  const joined = store.get("joined_"+me.id, []);
+  $("specials").innerHTML = SPECIALS.map(s=>{
+    const j = joined.includes(s.id);
+    return `<div class="event"><div class="date">${s.d}</div><div style="flex:1">
+      <b>${s.t}</b><span class="badge">メンバー限定</span><br><span class="muted">${s.body}（${s.cap}）</span><br>
+      <button ${j?'class="ghost" disabled':''} data-sp="${s.id}" style="margin-top:6px;padding:6px 14px;font-size:13px">${j?"申込済み ✓":"参加を申し込む"}</button>
+    </div></div>`;
+  }).join("");
+  document.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{
+    const list = store.get("joined_"+me.id, []);
+    if(!list.includes(b.dataset.sp)){ list.push(b.dataset.sp); store.set("joined_"+me.id, list) }
+    renderSpecials();
+  });
+}
+function renderWorks(){
+  const list = store.get("works_"+me.id, []);
+  $("works").innerHTML = list.length ? list.map(w=>
+    `<div class="work"><img src="${w.img}" alt=""><div>${w.date}<br>${escapeHtml(w.memo)}</div></div>`).join("")
+    : '<p class="muted">まだ記録はありません。</p>';
+}
+function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])) }
+
+$("loginBtn").onclick = ()=>{
+  const id = $("uid").value.trim().toUpperCase(), pw = $("pw").value;
+  if(MEMBERS[id] && MEMBERS[id].pw===pw){ $("err").textContent=""; login(id) }
+  else $("err").textContent = "IDまたはパスワードが違います。";
+};
+$("pw").addEventListener("keydown",e=>{ if(e.key==="Enter") $("loginBtn").click() });
+
+// QRを読み取ったときの処理（QRの中身は「このサイトのURL?qr=QR番号」）
+function useQr(code){
+  const msg = $("codeErr"), ev = OC_EVENTS.find(e=>e.code===code), t = new Date();
+  msg.style.color = "#c0392b";
+  if(!ev){ msg.textContent = "このQRコードは使えません。"; return }
+  if(t<ev.from || t>ev.to){ msg.textContent = `このQRコードの有効時間（${hm(ev.from)}〜${hm(ev.to)}）を過ぎています。`; return }
+  const used = store.get("codes_"+me.id, []);
+  if(used.includes(code)){ msg.textContent = "このイベントのスタンプは、もう押してあります。"; return }
+  used.push(code); store.set("codes_"+me.id, used);
+  store.set("visits_"+me.id, store.get("visits_"+me.id,0)+1);
+  me.visits++; render();
+  msg.style.color = "var(--accent)";
+  msg.textContent = `「${ev.name}」のスタンプを押しました！ ご来校ありがとうございました。`;
+  $("s-stamp").scrollIntoView({behavior:"smooth"});
+}
+function renderQr(){
+  const ev = OC_EVENTS[0], url = location.href.split("?")[0].split("#")[0]+"?qr="+ev.code;
+  $("qrInfo").textContent = `${ev.name}　有効時間：${hm(ev.from)}〜${hm(ev.to)}`;
+  $("qrBox").innerHTML = "";
+  if(window.QRCode) new QRCode($("qrBox"), {text:url, width:180, height:180});
+  else $("qrBox").textContent = "（QR画像を表示できませんでした）";
+}
+$("qrTest").onclick = ()=>useQr(OC_EVENTS[0].code);
+$("qrOld").onclick = ()=>useQr(OC_EVENTS[1].code);
+// URLにQR番号が付いていたら、ログイン後に処理する
+const pendingQr = new URLSearchParams(location.search).get("qr");
+const _login = login;
+login = id=>{ _login(id); renderQr(); if(pendingQr && !login.done){ login.done = true; useQr(pendingQr) } };
+
+$("wBtn").onclick = ()=>{
+  const f = $("wfile").files[0];
+  if(!f){ alert("写真を選んでください"); return }
+  const img = new Image(), reader = new FileReader();
+  reader.onload = ()=>{ img.src = reader.result };
+  img.onload = ()=>{
+    // 保存容量を節約するため小さく縮める
+    const c = document.createElement("canvas"), s = 400/Math.max(img.width,img.height);
+    c.width = img.width*Math.min(1,s); c.height = img.height*Math.min(1,s);
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    const list = store.get("works_"+me.id, []);
+    list.unshift({img:c.toDataURL("image/jpeg",.7), memo:$("wmemo").value, date:new Date().toLocaleDateString("ja-JP")});
+    if(!store.set("works_"+me.id, list)) alert("保存できませんでした（容量がいっぱいの可能性があります）");
+    $("wfile").value=""; $("wmemo").value=""; renderWorks();
+  };
+  reader.readAsDataURL(f);
+};
+
+$("logout").onclick = ()=>{ try{ localStorage.removeItem("session") }catch(e){} location.reload() };
+
+// ===== ホーム画面に追加 =====
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); installEvt = e; $("a2hsBtn").classList.remove("hidden") });
+function showA2hs(){
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if(standalone || store.get("a2hsClosed", false)) return;
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (ua.includes("Mac") && "ontouchend" in document);
+  $("a2hsHow").textContent = ios
+    ? "Safariの下にある共有ボタン（□に↑のマーク）を押して、「ホーム画面に追加」を選んでください。"
+    : "Chromeの右上のメニュー（︙）から「ホーム画面に追加」を選ぶか、下のボタンを押してください。";
+  $("a2hs").classList.remove("hidden");
+}
+$("a2hsBtn").onclick = async ()=>{ if(!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $("a2hs").classList.add("hidden") };
+$("a2hsClose").onclick = ()=>{ store.set("a2hsClosed", true); $("a2hs").classList.add("hidden") };
+const _login2 = login;
+login = id=>{ _login2(id); showA2hs() };
+
+if(pendingQr) $("err").textContent = "スタンプを押すには、ログインしてください。";
+const saved = store.get("session", null);
+if(saved && MEMBERS[saved]) login(saved);
+</script>
+</body>
+</html>
