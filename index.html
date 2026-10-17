@@ -73,6 +73,33 @@ label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
 .event{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .event:last-child{border:0}
 .date{min-width:56px;text-align:center;background:var(--soft);border-radius:8px;padding:4px;font-size:12px;color:var(--accent);font-weight:bold}
+/* 改行の調整（Androidで言葉の途中で折り返さないように） */
+body,p,b,h2,h3,.muted,.msg p{word-break:auto-phrase;line-break:strict;overflow-wrap:anywhere;text-wrap:pretty}
+h2{flex-wrap:nowrap}
+h2>span{flex:1;min-width:0}
+.rally [class^="mod-"] button,span[class^="mod-"] button{background:var(--mc)}
+.badge,button,.date{white-space:nowrap}
+/* モジュールごとの色 */
+.mod-A{--mc:#e2728f;--ms:#fde8ee}.mod-B{--mc:#e9864a;--ms:#fdeee3}.mod-C{--mc:#8f6fd1;--ms:#f0eafc}
+.modrow .date.on{background:var(--ms);color:var(--mc);border:1px solid var(--mc)}
+.modrow .badge{background:var(--mc)}
+.modrow b{color:var(--mc)}
+.nextup{font-size:16px;font-weight:bold;color:#b4532a;text-align:center;padding:10px;border-radius:12px;border:2px dashed #e9864a;background:#fff7f0;margin:10px 0}
+.nextup::before{content:"🎯 "}
+/* スタンプラリー */
+.rally{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:6px 0 4px}
+.rally .sp{display:flex;flex-direction:column;align-items:center;text-align:center;font-size:10px;word-break:keep-all;overflow-wrap:anywhere;color:var(--sub);line-height:1.3}
+.rally .ci{width:62px;height:62px;border-radius:50%;border:2px dashed var(--line);display:flex;align-items:center;justify-content:center;
+  font-weight:bold;font-size:15px;color:var(--sub);margin-bottom:4px;background:var(--card)}
+.rally .ci.on{border:2px solid var(--mc);background:var(--ms);color:var(--mc);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.rally .ci.on::after{content:"★";font-size:11px;margin-left:2px}
+.rally .ci.lock{border-style:solid;background:var(--soft);font-size:22px}
+.mod-S{--mc:#2f9e8f;--ms:#e3f6f3}.mod-F{--mc:#c9852c;--ms:#fbf0de}.mod-W{--mc:#4f7fcf;--ms:#e7eefb}.mod-M{--mc:#b08a4a;--ms:#f6eedf}
+.rally-h{font-size:14px;margin:14px 0 4px}
+.congrats{font-size:20px;font-weight:bold;color:#c0507a;text-align:center;padding:12px;border-radius:12px;
+  background:linear-gradient(90deg,#fde8ee,#fdeee3,#f0eafc);margin:10px 0}
+.track-now{background:linear-gradient(90deg,#e2728f,#e9864a)!important;color:#fff!important}
+.friendbox{background:linear-gradient(135deg,#fde8ee,#fdf3e3 50%,#efeafd)!important}
 .badge{font-size:11px;background:var(--accent);color:var(--accent-ink);border-radius:4px;padding:1px 6px;margin-left:4px}
 /* 作品記録 */
 .works{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:12px}
@@ -111,6 +138,20 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
     <p class="muted" style="font-size:11px;margin:8px 0 0">申込後、メンバーカード（IDとパスワード）をお渡しします。</p>
   </section>
 
+  <!-- パスワードの変更（初回は必ず。あとからも変更できる） -->
+  <section id="pwBox" class="card hidden">
+    <h2><span>パスワードを変更する</span></h2>
+    <p class="muted" id="pwLead">はじめてのログインです。忘れにくいように、パスワードを<b>自分の好きなもの</b>に変えてください。</p>
+    <label for="npw1">新しいパスワード（半角の英字・数字で6〜20文字）</label>
+    <input id="npw1" type="password" autocomplete="new-password">
+    <label for="npw2">もう一度入力</label>
+    <input id="npw2" type="password" autocomplete="new-password">
+    <p class="err" id="pwErr"></p>
+    <button id="pwSave" style="width:100%">変更する</button>
+    <p style="text-align:center;margin:8px 0 0"><button class="ghost" id="pwCancel">あとで変更する</button></p>
+    <p class="muted" style="font-size:11px;margin-top:8px">※ メンバーIDはカードに書かれたもののまま変わりません。パスワードを忘れたときは、担当の先生に伝えてください。新しいものを発行します。</p>
+  </section>
+
   <!-- メンバーページ -->
   <main id="home" class="hidden">
     <!-- ホーム画面に追加の案内（追加済み・閉じた場合は出さない） -->
@@ -143,9 +184,14 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
       <h2><span>Pre-Academy　<span id="progName">わたしの</span>進み具合</span></h2>
       <p class="muted">高2では「身近な楽しさと基礎」、高3では「本格的な実技とプロへの理解」を、段階的に学べます。</p>
       <div id="track"></div>
-      <h3 style="font-size:14px;margin:14px 0 6px">Lite｜3モジュール</h3>
+      <h3 class="rally-h">Lite｜3モジュール スタンプラリー</h3>
+      <div class="rally" id="rallyLite"></div>
       <div id="mods"></div>
       <p class="muted" id="modNext" style="margin-top:8px"></p>
+      <h3 class="rally-h">Prime｜季節の授業</h3>
+      <div class="rally" id="rallyPrime"></div>
+      <p class="muted" id="primeNote" style="font-size:12px;margin:2px 0 0"></p>
+      
       <p class="muted" style="font-size:12px">※ 高3向けに、夏休みの1日で複数モジュールを受けられる「ファストDAY」もあります。</p>
       <div class="msg" style="margin-top:12px"><div class="from">入学前教育としての学び</div>
         <p style="margin:4px 0">LITEは、ル・トーアが行っている<b>入学前教育</b>です。3モジュールで作った作品は「学びのバインダー」に残しておきましょう。<br>AO入試に出願したあと、この作品を<b>適性判定の提出物（判定の材料）として使うこと</b>ができます。</p>
@@ -154,10 +200,10 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
       <div class="msg" style="margin-top:12px"><div class="from">4月 本科入学のあと</div>
         <p style="margin:4px 0">入学後は全員同じスタートです。Pre-Academyで学んだ人は、班の<b>TA（ティーチングアシスタント）</b>として仲間をサポートします。</p></div>
       <!-- 友人紹介（infoCloudの紹介フォームへ） -->
-      <div style="margin-top:16px;padding:14px;border-radius:10px;background:var(--soft);text-align:center">
-        <b>美容に興味のある友だちはいませんか？</b>
-        <p class="muted" style="margin:4px 0 10px">一緒にPre-Academyで学べる友だちを紹介してください。</p>
-        <button class="friendBtn" style="width:100%">友だちを紹介する ↗</button>
+      <div class="friendbox" style="margin-top:16px;padding:14px;border-radius:10px;background:var(--soft);text-align:center">
+        <b>美容に興味のあるお友だちはいませんか？</b>
+        <p class="muted" style="margin:4px 0 10px">一緒にPre-Academyで学べるお友だちを、ぜひ誘ってください。</p>
+        <button class="friendBtn" style="width:100%">お友だちを誘う ↗</button>
       </div>
     </section>
 
@@ -215,7 +261,7 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
       <label for="wmod">授業</label>
       <select id="wmod" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:16px">
         <option>A：ヘアアレンジ</option><option>B：メイク／カラー</option><option>C：ネイル</option>
-        <option>夏：ファースト・カット式／ワインディング入門</option><option>秋：サロン・カラーリング／ブローワーク</option><option>その他</option>
+        <option>夏：ワインディング入門</option><option>秋：サロン・カラーリング／ブローワーク</option><option>その他</option>
       </select>
       <label for="wfile">写真</label>
       <input id="wfile" type="file" accept="image/*">
@@ -227,8 +273,9 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
       <p class="muted" id="pfMsg" style="font-size:12px"></p>
     </section>
 
-    <p style="text-align:center"><button class="ghost" id="logout">ログアウト</button></p>
-    <p style="text-align:center;margin-top:4px"><button class="ghost" id="unregBtn" style="font-size:11px;border:0;text-decoration:underline">メンバー登録を解除する</button></p>
+    <p style="text-align:center"><button class="ghost" id="logout">ログアウト</button>
+      <button class="ghost" id="pwOpen" style="margin-left:6px">パスワードを変更</button></p>
+    <p style="text-align:right;margin-top:4px"><button class="ghost" id="unregBtn" title="メンバー登録を解除する" aria-label="メンバー登録を解除する" style="font-size:16px;border:0;padding:4px 8px;opacity:.55">⎋</button></p>
 
     <!-- 試作確認用：職員がクロージングで見せるQR画面（本番では職員用ページに分ける） -->
     <section id="s-staff" class="card" style="border:2px dashed var(--accent)">
@@ -266,7 +313,7 @@ const MEMBERS = {
 // スタンプ欄（Lite3モジュール＋Prime4回）
 const SLOTS = [
   {id:"A", s:"A", n:"ヘアアレンジ"}, {id:"B", s:"B", n:"メイク／カラー"}, {id:"C", s:"C", n:"ネイル"},
-  {id:"S", s:"夏", n:"ファースト・カット式"}, {id:"F", s:"秋", n:"サロン・カラーリング"}, {id:"W", s:"冬", n:"プロデモ＋限定Q&A"}, {id:"M", s:"3月", n:"卒制VIP観戦＋修了式"}
+  {id:"S", s:"夏", n:"ワインディング入門"}, {id:"F", s:"秋", n:"サロン・カラーリング"}, {id:"W", s:"冬", n:"プロデモ＋限定Q&A"}, {id:"M", s:"3月", n:"卒制VIP観戦＋修了式"}
 ];
 const MODS = [
   {id:"A", t:"ヘアアレンジ", d:"ピン留め・アイロン操作など"},
@@ -321,7 +368,7 @@ const EVENTS = [
 
 // Prime（needMods:true は3モジュール修了者限定）
 const SPECIALS = [
-  {id:"sp1", d:"夏", t:"ファースト・カット式 ＋ ワインディング入門", body:"初めてハサミを持つ特別な日。", needMods:true},
+  {id:"sp1", d:"夏", t:"ワインディング入門", body:"Primeの最初の授業です。", needMods:true},
   {id:"sp2", d:"秋", t:"サロン・カラーリング ＋ プロのブローワーク", body:"サロンで使う技術を体験します。"},
   {id:"sp3", d:"冬", t:"トップサロン・プロデモ ＋ 限定Q&A", body:"プロのデモのあと、メンバーだけがステージ前に集まって質問できます。"},
   {id:"sp4", d:"3月", t:"卒業制作発表会 VIP観戦 ＋ 修了式", body:"Pre-Academyの修了式を行います。"}
@@ -379,19 +426,31 @@ function renderProg(){
   $("mrank").textContent = (me.grade===3?"Prime":"Lite")+"　|　"+rankOf(me.visits)+" MEMBER";
   $("track").innerHTML = ["Lite","Prime","4月 本科入学"].map((t,i)=>{
     const now = (i===0&&me.grade===2)||(i===1&&me.grade===3);
-    return `<span class="badge" style="${now?"":"background:var(--soft);color:var(--sub)"};font-size:12px;padding:3px 10px;margin:0 4px 4px 0;display:inline-block">${now?"▶ いまここ：":""}${t}</span>`;
+    return `<span class="badge ${now?"track-now":""}" style="${now?"":"background:var(--soft);color:var(--sub)"};font-size:12px;padding:3px 10px;margin:0 4px 4px 0;display:inline-block">${now?"▶ いまここ：":""}${t}</span>`;
   }).join("");
-  $("mods").innerHTML = MODS.map(m=>{
+  // スタンプラリー：Lite（A・B・C）
+  $("rallyLite").innerHTML = MODS.map(m=>{
     const ok = me.mods.includes(m.id);
-    return `<div class="event"><div class="date" style="${ok?"":"background:transparent;border:1px dashed var(--line);color:var(--sub)"}">${m.id}<br>${ok?"修了":"未"}</div>
-      <div><b>${m.t}</b>${ok?'<span class="badge">修了 ✓</span>':""}<br><span class="muted">${m.d}</span>${ok?"":"<br>"+applyBtn(m.id,"モジュール"+m.id+" "+m.t,"infoCloudで申し込む")}</div></div>`;
+    return `<div class="sp mod-${m.id}"><div class="ci ${ok?"on":""}">${m.id}</div><b style="color:${ok?"var(--mc)":"var(--sub)"}">${m.t}</b>${ok?"修了":"まだ"}</div>`;
   }).join("");
+  // まだのモジュールの申込ボタン
+  const rest = MODS.filter(m=>!me.mods.includes(m.id));
+  $("mods").innerHTML = rest.length ? `<p class="muted" style="margin:8px 0 2px">まだのモジュールに申し込む</p>` +
+    rest.map(m=>`<span class="mod-${m.id}" style="display:inline-block;margin-right:6px">${applyBtn(m.id,"モジュール"+m.id+" "+m.t,m.id+"："+m.t)}</span>`).join("") : "";
+  // スタンプラリー：Prime（Lite修了までは鍵）
+  const open = modsDone();
+  $("rallyPrime").innerHTML = SLOTS.filter(x=>!MODS.some(m=>m.id===x.id)).map(x=>{
+    const ok = me.att.includes(x.id);
+    return `<div class="sp mod-${x.id}"><div class="ci ${open?(ok?"on":""):"lock"}">${open?x.s:"🔑"}</div>${open?`<b style="color:${ok?"var(--mc)":"var(--sub)"}">${x.s}</b>${x.n}`:`${x.s}<br>${x.n}`}</div>`;
+  }).join("");
+  $("primeNote").textContent = open ? "Primeの授業に参加すると、スタンプが押されます。" : "🔑 Liteの3モジュールをすべて修了すると、Primeの鍵が開きます。";
   const pf = API_URL ? (me.pf || null) : store.get("pf_"+me.id, null);
   $("aoCheck").innerHTML = `${modsDone()?"✅":"⬜"} 3モジュールすべて修了<br>${pf?"✅":"⬜"} 学びのバインダーを提出${pf?`（${pf}）`:""}`
     + (modsDone()&&pf ? `<br><b style="color:var(--accent)">作品がそろいました（出願後の判定材料に使えます）</b>` : "");
   $("pfMsg").textContent = pf ? `提出済み（${pf}）。作品を追加したら、もう一度提出できます。` : "提出すると、先生があなたの作品を確認します。";
   const left = MODS.filter(m=>!me.mods.includes(m.id)).length;
-  $("modNext").textContent = left ? `あと${left}つで3モジュール修了！ Primeの「ファースト・カット式」に参加できるようになります。` : "3モジュールすべて修了しました。おめでとうございます！";
+  $("modNext").className = left ? "nextup" : "congrats";
+  $("modNext").textContent = left ? `あと${left}つで3モジュール修了！ Primeに進めます。` : "3モジュールすべて修了しました。おめでとうございます！";
 }
 function renderVips(){
   const reg = store.get("vip_"+me.id, {});
@@ -446,6 +505,7 @@ $("loginBtn").onclick = async ()=>{
       TOKEN = r.token; $("pw").value = ""; $("err").textContent = "";
       MEMBERS[r.member.id] = r.member;   // 本人の分だけを、このページを開いている間だけ覚える
       login(r.member.id);
+      if(r.mustChange) openPw(true);
     } else $("err").textContent = r.msg || "IDまたはパスワードが違います。";
   }catch(e){ $("err").textContent = "通信できませんでした。電波の良いところで、もう一度お試しください。" }
   btn.disabled = false; btn.textContent = "ログイン";
@@ -454,7 +514,7 @@ $("loginBtn").onclick = async ()=>{
 function applyMember(m){
   if(!m) return;
   me.att = [...m.att]; me.mods = me.att.filter(a=>MODS.some(x=>x.id===a)); me.visits = me.att.length; me.pf = m.pf;
-  render();
+  render(); scrollTo(0,0);
 }
 function stampMessage(text, ok){
   const msg = $("codeErr"); msg.style.color = ok ? "var(--accent)" : "#c0392b"; msg.textContent = text;
@@ -484,7 +544,7 @@ async function useQr(code){
   me.att.push(ev.mod); me.mods = me.att.filter(a=>MODS.some(m=>m.id===a)); me.visits = me.att.length; render();
   msg.style.color = "var(--accent)";
   msg.textContent = `${ev.name}のスタンプを押しました！ 参加ありがとうございました。`;
-  $("s-stamp").scrollIntoView({behavior:"smooth"});
+  scrollTo({top:0,behavior:"smooth"});
 }
 function renderQr(){
   const ev = OC_EVENTS[0], url = location.href.split("?")[0].split("#")[0]+"?qr="+ev.code;
@@ -542,6 +602,36 @@ $("unregBtn").onclick = async ()=>{
   alert("登録を解除しました。ご利用ありがとうございました。\n【試作】本番では、解除したことが学校の名簿に記録されます。");
   location.reload();
 };
+// ===== パスワードの変更 =====
+function openPw(first){
+  $("pwLead").innerHTML = first ? "はじめてのログインです。忘れにくいように、パスワードを<b>自分の好きなもの</b>に変えてください。"
+                                : "新しいパスワードを入力してください。";
+  $("pwCancel").textContent = first ? "あとで変更する" : "やめる";
+  $("npw1").value = $("npw2").value = ""; $("pwErr").textContent = "";
+  $("home").classList.add("hidden"); $("pwBox").classList.remove("hidden"); scrollTo(0,0);
+}
+function closePw(){ $("pwBox").classList.add("hidden"); $("home").classList.remove("hidden"); scrollTo(0,0) }
+$("pwOpen").onclick = ()=>openPw(false);
+$("pwCancel").onclick = closePw;
+$("pwSave").onclick = async ()=>{
+  const a = $("npw1").value, b = $("npw2").value;
+  if(!/^[A-Za-z0-9]{6,20}$/.test(a)){ $("pwErr").textContent = "半角の英字・数字で、6〜20文字にしてください。"; return }
+  if(a !== b){ $("pwErr").textContent = "2回の入力が一致しません。"; return }
+  if(a.toUpperCase() === me.id){ $("pwErr").textContent = "メンバーIDと同じ文字は使えません。"; return }
+  if(API_URL){
+    const btn = $("pwSave"); btn.disabled = true; btn.textContent = "変更しています…";
+    try{
+      const r = await api("changePassword", {token:TOKEN, newPw:a});
+      btn.disabled = false; btn.textContent = "変更する";
+      if(r.expired){ alert(r.msg); location.reload(); return }
+      if(!r.ok){ $("pwErr").textContent = r.msg; return }
+    }catch(e){ btn.disabled = false; btn.textContent = "変更する"; $("pwErr").textContent = "通信できませんでした。もう一度お試しください。"; return }
+  } else {
+    MEMBERS[me.id].pw = a;   // 試作（架空データ）のときは、このページを開いている間だけ変わる
+  }
+  alert("パスワードを変更しました。次からは新しいパスワードでログインしてください。");
+  closePw();
+};
 $("pfBtn").onclick = async ()=>{
   if(!store.get("works_"+me.id, []).length){ alert("先に作品の写真を記録してください"); return }
   if(API_URL){
@@ -558,7 +648,7 @@ $("logout").onclick =()=>location.reload();
 let installEvt = null;
 window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); installEvt = e; $("a2hsBtn").classList.remove("hidden") });
 // ===== 今回表示する画面（ここに書いたidだけを表示。全部出すときは SHOW_ONLY = null にする） =====
-const SHOW_ONLY = ["s-prog"];
+const SHOW_ONLY = ["s-card", "s-prog", "s-works", "s-msg", "s-event"];
 function applyShowOnly(){
   if(!SHOW_ONLY) return;
   document.querySelectorAll("#home > section, #home > nav").forEach(el=>{
@@ -567,7 +657,7 @@ function applyShowOnly(){
   $("progName").textContent = me.name+" さんの";
 }
 const _login3 = login;
-login = id=>{ _login3(id); applyShowOnly() };
+login = id=>{ _login3(id); applyShowOnly(); scrollTo(0,0) };
 
 function showA2hs(){
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
