@@ -58,7 +58,7 @@ label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
 .member .name{font-size:22px;margin:6px 0}
 .member .rank{display:inline-block;border:1px solid #d2ad6c;color:#d2ad6c;border-radius:20px;padding:2px 12px;font-size:12px}
 /* スタンプ */
-.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .stamp{aspect-ratio:1;border:2px dashed var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--sub);text-align:center}
 .stamp.on{border:2px solid var(--accent);background:var(--soft);color:var(--accent);font-weight:bold}
 /* 動画 */
@@ -88,6 +88,7 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
 <div class="wrap">
   <header>
     <div class="logo"><small>MEMBERS ONLY</small>Le TOA MEMBERS</div>
+    <div class="muted" style="letter-spacing:.2em;font-size:11px;margin-top:4px">Le TOA Pre-Academy</div>
   </header>
 
   <!-- ログイン画面 -->
@@ -100,6 +101,14 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
     <input id="pw" type="password" autocomplete="current-password">
     <p class="err" id="err"></p>
     <button id="loginBtn" style="width:100%">ログイン</button>
+  </section>
+
+  <!-- Pre-Academy 参加申込（infoCloudの申込フォームへ） -->
+  <section id="entryBox" class="card" style="text-align:center">
+    <h2 style="justify-content:center"><span>Le TOA Pre-Academy に参加する</span></h2>
+    <p class="muted" style="margin:0 0 12px">高2の夏から始まる、入学前の特別プログラムです。<br>参加の申込は、下のボタンから受け付けています。</p>
+    <button class="entryBtn" style="width:100%">Pre-Academy 参加申込 ↗</button>
+    <p class="muted" style="font-size:11px;margin:8px 0 0">申込後、メンバーカード（IDとパスワード）をお渡しします。</p>
   </section>
 
   <!-- メンバーページ -->
@@ -116,8 +125,8 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
     </div></section>
 
     <nav>
-      <a href="#s-card">会員証</a><a href="#s-stamp">スタンプ</a><a href="#s-video">限定動画</a>
-      <a href="#s-msg">メッセージ</a><a href="#s-event">先行案内</a><a href="#s-special">限定イベント</a><a href="#s-works">作品記録</a>
+      <a href="#s-card">会員証</a><a href="#s-prog">プログラム</a><a href="#s-special">高3授業</a><a href="#s-vip">VIPパス</a>
+      <a href="#s-works">バインダー</a><a href="#s-stamp">スタンプ</a><a href="#s-video">限定動画</a><a href="#s-msg">メッセージ</a><a href="#s-event">先行案内</a>
     </nav>
 
     <!-- ① 名前で迎えるマイページ -->
@@ -129,13 +138,36 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
       <p style="font-size:12px;color:#cbbfa9;margin:12px 0 0">あなたは、ル・トーアが迎えるメンバーの一人です。</p>
     </section>
 
-    <!-- ② 来校スタンプ -->
+    <!-- Pre-Academy：Lite 3モジュール -->
+    <section id="s-prog" class="card">
+      <h2><span>Pre-Academy　<span id="progName">わたしの</span>進み具合</span></h2>
+      <p class="muted">高2では「身近な楽しさと基礎」、高3では「本格的な実技とプロへの理解」を、段階的に学べます。</p>
+      <div id="track"></div>
+      <h3 style="font-size:14px;margin:14px 0 6px">Lite｜3モジュール</h3>
+      <div id="mods"></div>
+      <p class="muted" id="modNext" style="margin-top:8px"></p>
+      <p class="muted" style="font-size:12px">※ 高3向けに、夏休みの1日で複数モジュールを受けられる「ファストDAY」もあります。</p>
+      <div class="msg" style="margin-top:12px"><div class="from">AO入試とのつながり（予定）</div>
+        <p style="margin:4px 0"><b>3モジュールをすべて修了し、学びのバインダー（ポートフォリオ）を提出</b>した人は、AO入試の「適性判定確認試験」が免除になります。</p>
+        <div id="aoCheck" style="font-size:13px;margin:6px 0"></div>
+        <p class="muted" style="font-size:12px;margin:0">※ 合格を保証するものではありません。条件を満たさない場合も、通常のAO入試で受験できます。</p></div>
+      <div class="msg" style="margin-top:12px"><div class="from">4月 本科入学のあと</div>
+        <p style="margin:4px 0">入学後は全員同じスタートです。Pre-Academyで学んだ人は、班の<b>TA（ティーチングアシスタント）</b>として仲間をサポートします。</p></div>
+      <!-- 友人紹介（infoCloudの紹介フォームへ） -->
+      <div style="margin-top:16px;padding:14px;border-radius:10px;background:var(--soft);text-align:center">
+        <b>美容に興味のある友だちはいませんか？</b>
+        <p class="muted" style="margin:4px 0 10px">一緒にPre-Academyで学べる友だちを紹介してください。</p>
+        <button class="friendBtn" style="width:100%">友だちを紹介する ↗</button>
+      </div>
+    </section>
+
+    <!-- ② モジュール参加スタンプ -->
     <section id="s-stamp" class="card">
-      <h2>来校スタンプ</h2>
-      <p class="muted">オープンキャンパスや学校行事に来るたびにスタンプが増え、ランクが上がります。</p>
+      <h2>モジュール参加スタンプ</h2>
+      <p class="muted">Pre-Academyのモジュールや季節の授業に参加するたびにスタンプが増え、ランクが上がります。</p>
       <div class="stamps" id="stamps"></div>
       <p class="muted" id="nextRank" style="margin-top:10px"></p>
-      <p class="muted" style="margin-top:12px">📷 スタンプのもらい方：オープンキャンパスの最後に担当の先生が見せるQRコードを、スマホのカメラで読み取ってください。QRコードはその場でしか使えません。</p>
+      <p class="muted" style="margin-top:12px">📷 スタンプのもらい方：授業の最後に担当の先生が見せるQRコードを、スマホのカメラで読み取ってください。QRコードはその場でしか使えません。</p>
       <p class="err" id="codeErr" style="font-weight:bold"></p>
     </section>
 
@@ -163,34 +195,49 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
 
     <!-- ⑦ 登録者だけが参加できる特別イベント -->
     <section id="s-special" class="card">
-      <h2>メンバー限定 特別イベント</h2>
-      <p class="muted">このイベントは、Le TOA MEMBERS に登録した人だけが参加できます。</p>
+      <h2>Prime｜季節ごとの本格授業</h2>
+      <p class="muted">メンバーだけが参加できる、季節ごとの本格的な授業です。</p>
       <div id="specials"></div>
+    </section>
+
+    <!-- VIPパス（10月フェスティバル／3月卒業制作発表会） -->
+    <section id="s-vip" class="card">
+      <h2>VIP特別招待</h2>
+      <p class="muted">Le TOA FESTIVAL（10月）と卒業制作発表会（3月）に、VIPとして招待します。事前に登録するとVIPパスが発行されます。</p>
+      <div id="vips"></div>
+      <p class="muted" style="font-size:12px;margin-top:10px">※ 進路研究の一環として、学校長名の「参加承諾・配慮依頼状」や、公印入りの「参加証明書」を発行できます。高校での公欠の申請に使ってください。希望はinfoCloudの事前登録画面で選べます。</p>
     </section>
 
     <!-- ⑥ 作品記録 -->
     <section id="s-works" class="card">
-      <h2>わたしの作品記録</h2>
-      <p class="muted">体験授業で作った作品の写真を残しておけます。入学後に見返すと、自分の成長がわかります。</p>
+      <h2>学びのバインダー</h2>
+      <p class="muted">参加した授業で作った作品の写真を、ポートフォリオとして残しておけます。入学後に見返すと、自分の成長がわかります。</p>
+      <label for="wmod">授業</label>
+      <select id="wmod" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:16px">
+        <option>A：ヘアアレンジ</option><option>B：メイク／カラー</option><option>C：ネイル</option>
+        <option>夏：ファースト・カット式／ワインディング入門</option><option>秋：サロン・カラーリング／ブローワーク</option><option>その他</option>
+      </select>
       <label for="wfile">写真</label>
       <input id="wfile" type="file" accept="image/*">
       <label for="wmemo">ひとこと</label>
       <input id="wmemo" placeholder="例：初めてのワインディング！">
       <p style="margin-top:10px"><button id="wBtn">記録する</button></p>
       <div class="works" id="works"></div>
+      <p style="margin-top:12px"><button class="ghost" id="pfBtn">ポートフォリオとして提出する</button></p>
+      <p class="muted" id="pfMsg" style="font-size:12px"></p>
     </section>
 
     <p style="text-align:center"><button class="ghost" id="logout">ログアウト</button></p>
 
     <!-- 試作確認用：職員がクロージングで見せるQR画面（本番では職員用ページに分ける） -->
-    <section class="card" style="border:2px dashed var(--accent)">
+    <section id="s-staff" class="card" style="border:2px dashed var(--accent)">
       <h2>【試作確認用】職員がクロージングで見せる画面</h2>
       <p class="muted" id="qrInfo"></p>
       <div id="qrBox" style="display:flex;justify-content:center;padding:12px;background:#fff;border-radius:8px"></div>
       <p class="muted">パソコンでは自分の画面のQRを読めないため、下のボタンで「読み取った」ことにして試せます。</p>
       <p><button id="qrTest">このQRを読み取ったことにする</button>
          <button class="ghost" id="qrOld">有効時間外のQRを試す</button></p>
-      <p class="muted">提示し忘れたときは、職員が名簿の表の「来校」欄に入力すれば、次にページを開いたときにスタンプが増えます。</p>
+      <p class="muted">提示し忘れたときは、職員が名簿の表の該当モジュールの欄に「参加」と入力すれば、次にページを開いたときにスタンプが増えます。</p>
     </section>
   </main>
 
@@ -201,15 +248,59 @@ nav a{white-space:nowrap;font-size:13px;color:var(--sub);text-decoration:none;bo
 <script>
 // ===== 試作用の仮データ（本番ではここを管理用の表から読み込む） =====
 const MEMBERS = {
-  "LT-0001": {pw:"toa2027", name:"山田 花子", visits:2},
-  "LT-0002": {pw:"toa2027", name:"佐藤 結衣", visits:4}
+  // grade：学年、att：参加済みのモジュール・授業（本番では職員が表に記録）
+  "LT-0001": {pw:"toa2027", name:"山田 花子", grade:2, att:["A"]},
+  "LT-0002": {pw:"toa2027", name:"佐藤 結衣", grade:3, att:["A","B","C","S"]},
+  // ↓ 会議参加者の職員用テストID（2026-10-27会議用。試作のため誰でもページの中身から見られる。本番前に削除）
+  "ST-01": {pw:"gvjdd2sx", name:"藤井 理事長", grade:3, att:["A", "B", "C", "S"]},
+  "ST-02": {pw:"82t7s748", name:"藤井 副校長", grade:3, att:["A", "B", "C"]},
+  "ST-03": {pw:"jpkmcwe6", name:"立松 学務部長", grade:2, att:["A"]},
+  "ST-04": {pw:"rmfvtxr8", name:"稲見 営業主任", grade:2, att:["A", "B"]},
+  "ST-05": {pw:"hs6zs83y", name:"田村 先生", grade:2, att:[]},
+  "ST-06": {pw:"sx7sbfpj", name:"高田 先生", grade:3, att:["A", "B", "C", "S", "F"]},
+  "ST-07": {pw:"q9wbjus7", name:"礒見 先生", grade:2, att:["A", "C"]}
 };
-// ===== 来校スタンプ用のQR（本番では「イベント表」に 日付・有効時間・QR番号 を1行ずつ書く） =====
-// 試作では、いま開いている時刻の前後30分を「クロージング中」とみなす
+// スタンプ欄（Lite3モジュール＋Prime4回）
+const SLOTS = [
+  {id:"A", s:"A", n:"ヘアアレンジ"}, {id:"B", s:"B", n:"メイク／カラー"}, {id:"C", s:"C", n:"ネイル"},
+  {id:"S", s:"夏", n:"ファースト・カット式"}, {id:"F", s:"秋", n:"サロン・カラーリング"}, {id:"W", s:"冬", n:"プロデモ＋限定Q&A"}, {id:"M", s:"3月", n:"卒制VIP観戦＋修了式"}
+];
+const MODS = [
+  {id:"A", t:"ヘアアレンジ", d:"ピン留め・アイロン操作など"},
+  {id:"B", t:"メイク／カラー", d:"ベースカラー診断・顔型・眉分析など"},
+  {id:"C", t:"ネイル", d:"チップへのアート制作・パーツ配置など"}
+];
+// ===== 申込はinfoCloud（日東）で受け付ける。各申込ページのURLをここに書く（空欄は試作用） =====
+const INFOCLOUD = {
+  entry:"",                    // Pre-Academy 参加申込フォーム（infoCloudからもらうURLをここに貼る）
+  friend:"",                   // 友人紹介フォーム（infoCloudからもらうURLをここに貼る）
+  A:"", B:"", C:"",            // Lite モジュール
+  sp1:"", sp2:"", sp3:"", sp4:"", // Prime
+  vip1:"", vip2:""             // VIP事前登録（公欠用書類の希望もinfoCloudの申込画面で聞く）
+};
+function openApply(key, label){
+  const url = INFOCLOUD[key];
+  if(url) window.open(url, "_blank", "noopener");
+  else alert(`【試作】ここで infoCloud の「${label}」申込ページが開きます。`);
+  const list = store.get("opened_"+me.id, []);
+  if(!list.includes(key)){ list.push(key); store.set("opened_"+me.id, list) }
+  render();
+}
+const applyBtn = (key, label, text)=>{
+  const opened = store.get("opened_"+me.id, []).includes(key);
+  return `<button ${opened?'class="ghost"':''} data-apply="${key}" data-label="${label}" style="margin-top:6px;padding:6px 14px;font-size:13px">${text} ↗</button>`
+    + (opened?`<div class="muted" style="font-size:11px;margin-top:2px">申込ページを開きました。受付完了のお知らせはinfoCloudから届きます。</div>`:"");
+};
+const VIPS = [
+  {id:"vip1", d:"10月", t:"Le TOA FESTIVAL"},
+  {id:"vip2", d:"3月", t:"卒業制作発表会"}
+];
+// ===== スタンプ用のQR（本番では「授業表」に 日付・モジュール・有効時間・QR番号 を1行ずつ書く） =====
+// 試作では、いま開いている時刻の前後30分を「授業の終わり」とみなす
 const now0 = new Date(), ymd = d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
 const OC_EVENTS = [
-  {code:"OC"+ymd(now0)+"A", name:"本日のオープンキャンパス", from:new Date(now0-30*60000), to:new Date(+now0+30*60000)},
-  {code:"OC20260920A", name:"9/20 オープンキャンパス", from:new Date("2026-09-20T15:00:00"), to:new Date("2026-09-20T16:00:00")}
+  {code:"PA"+ymd(now0)+"B", mod:"B", name:"本日のモジュールB「メイク／カラー」", from:new Date(now0-30*60000), to:new Date(+now0+30*60000)},
+  {code:"PA20260920A", mod:"A", name:"9/20 モジュールA「ヘアアレンジ」", from:new Date("2026-09-20T15:00:00"), to:new Date("2026-09-20T16:00:00")}
 ];
 const hm = d=>`${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,"0")}`;
 const RANKS = [[1,"BRONZE"],[3,"SILVER"],[5,"GOLD"]];
@@ -220,15 +311,17 @@ const VIDEOS = [
   {t:"先生の本気カット 1本まるごと", need:5, icon:"▶"}
 ];
 const EVENTS = [
-  {d:"11/8", t:"Le TOA FESTIVAL メンバー見学席のご案内", tag:"メンバー先行"},
+  {d:"8月", t:"ファストDAY（夏休みの1日で複数モジュール）先行予約", tag:"高3向け"},
   {d:"11/22", t:"オープンキャンパス「メイク特集」 先行予約", tag:"メンバー先行"},
   {d:"12/13", t:"在校生と話そう！クリスマス座談会", tag:"メンバー限定"}
 ];
 
+// Prime（needMods:true は3モジュール修了者限定）
 const SPECIALS = [
-  {id:"sp1", d:"12/20(土)", t:"メンバー限定ヘアアレンジ教室", body:"先生が少人数で教えるアレンジ講座。作った作品はそのまま作品記録へ。", cap:"定員20名"},
-  {id:"sp2", d:"1/24(土)", t:"受賞卒業生のサロン見学ツアー", body:"活躍中の卒業生のサロンを訪ねて、プロの現場を見学します。", cap:"定員15名"},
-  {id:"sp3", d:"3/14(土)", t:"入学前メンバー交流会", body:"同じ春に入学する仲間や先輩と、ひと足先に顔を合わせる会です。", cap:"定員40名"}
+  {id:"sp1", d:"夏", t:"ファースト・カット式 ＋ ワインディング入門", body:"初めてハサミを持つ特別な日。", needMods:true},
+  {id:"sp2", d:"秋", t:"サロン・カラーリング ＋ プロのブローワーク", body:"サロンで使う技術を体験します。"},
+  {id:"sp3", d:"冬", t:"トップサロン・プロデモ ＋ 限定Q&A", body:"プロのデモのあと、メンバーだけがステージ前に集まって質問できます。"},
+  {id:"sp4", d:"3月", t:"卒業制作発表会 VIP観戦 ＋ 修了式", body:"Pre-Academyの修了式を行います。"}
 ];
 
 // ===== 保存（この端末の中だけ） =====
@@ -243,10 +336,11 @@ let me = null;
 
 function login(id){
   me = {id, ...MEMBERS[id]};
-  const extra = store.get("visits_"+id, 0);
-  me.visits += extra;
-  store.set("session", id);
+  me.att = [...new Set([...MEMBERS[id].att, ...store.get("att_"+id, [])])];
+  me.mods = me.att.filter(a=>MODS.some(m=>m.id===a));
+  me.visits = me.att.length;
   $("login").classList.add("hidden");
+  $("entryBox").classList.add("hidden");
   $("home").classList.remove("hidden");
   render();
 }
@@ -259,10 +353,10 @@ function render(){
   $("mno").textContent = "No. "+me.id;
   $("mrank").textContent = rankOf(me.visits)+" MEMBER";
   // スタンプ
-  $("stamps").innerHTML = Array.from({length:10},(_,i)=>
-    `<div class="stamp ${i<me.visits?"on":""}">${i<me.visits?"TOA<br>★":(i+1)}</div>`).join("");
+  $("stamps").innerHTML = SLOTS.map(sl=>{ const on = me.att.includes(sl.id);
+    return `<div style="text-align:center"><div class="stamp ${on?"on":""}">${on?sl.s+"<br>★":sl.s}</div><div class="muted" style="font-size:10px;line-height:1.3;margin-top:3px">${sl.n}</div></div>` }).join("");
   const next = RANKS.find(([n])=>n>me.visits);
-  $("nextRank").textContent = next ? `あと${next[0]-me.visits}回で ${next[1]} ランク！` : "最高ランクです。ありがとう！";
+  $("nextRank").textContent = next ? `あと${next[0]-me.visits}つで ${next[1]} ランク！` : "最高ランクです。ありがとう！";
   // 動画
   $("videos").innerHTML = VIDEOS.map(v=>{
     const open = me.visits>=v.need;
@@ -272,28 +366,65 @@ function render(){
   // イベント
   $("events").innerHTML = EVENTS.map(e=>
     `<div class="event"><div class="date">${e.d}</div><div>${e.t}<span class="badge">${e.tag}</span></div></div>`).join("");
+  renderProg();
   renderSpecials();
+  renderVips();
   renderWorks();
+}
+const modsDone = ()=>MODS.every(m=>me.mods.includes(m.id));
+function renderProg(){
+  $("mrank").textContent = (me.grade===3?"Prime":"Lite")+"　|　"+rankOf(me.visits)+" MEMBER";
+  $("track").innerHTML = ["Lite","Prime","4月 本科入学"].map((t,i)=>{
+    const now = (i===0&&me.grade===2)||(i===1&&me.grade===3);
+    return `<span class="badge" style="${now?"":"background:var(--soft);color:var(--sub)"};font-size:12px;padding:3px 10px;margin:0 4px 4px 0;display:inline-block">${now?"▶ いまここ：":""}${t}</span>`;
+  }).join("");
+  $("mods").innerHTML = MODS.map(m=>{
+    const ok = me.mods.includes(m.id);
+    return `<div class="event"><div class="date" style="${ok?"":"background:transparent;border:1px dashed var(--line);color:var(--sub)"}">${m.id}<br>${ok?"修了":"未"}</div>
+      <div><b>${m.t}</b>${ok?'<span class="badge">修了 ✓</span>':""}<br><span class="muted">${m.d}</span>${ok?"":"<br>"+applyBtn(m.id,"モジュール"+m.id+" "+m.t,"infoCloudで申し込む")}</div></div>`;
+  }).join("");
+  const pf = store.get("pf_"+me.id, null);
+  $("aoCheck").innerHTML = `${modsDone()?"✅":"⬜"} 3モジュールすべて修了<br>${pf?"✅":"⬜"} 学びのバインダーを提出${pf?`（${pf}）`:""}`
+    + (modsDone()&&pf ? `<br><b style="color:var(--accent)">免除の条件を満たしています</b>` : "");
+  $("pfMsg").textContent = pf ? `提出済み（${pf}）。作品を追加したら、もう一度提出できます。` : "提出すると、先生があなたの作品を確認します。";
+  const left = MODS.filter(m=>!me.mods.includes(m.id)).length;
+  $("modNext").textContent = left ? `あと${left}つで3モジュール修了！ Primeの「ファースト・カット式」に参加できるようになります。` : "3モジュールすべて修了しました。おめでとうございます！";
+}
+function renderVips(){
+  const reg = store.get("vip_"+me.id, {});
+  $("vips").innerHTML = VIPS.map(v=>{
+    const r = reg[v.id];
+    return `<div class="event"><div class="date">${v.d}</div><div style="flex:1"><b>${v.t}</b><span class="badge">VIP</span><br>
+      ${r ? `<div class="member" style="border-radius:10px;padding:10px 12px;margin-top:6px;color:#f6eedf">
+               <div style="font-size:11px;color:#d2ad6c;letter-spacing:.2em">VIP PASS</div>
+               <div style="font-size:16px">${escapeHtml(me.name)} さん</div>
+               <div style="font-size:12px;color:#cbbfa9">${v.t}　No. ${me.id}</div></div>`
+          : applyBtn(v.id, v.t+" VIP事前登録", "infoCloudで事前登録する")
+            + `<br><button class="ghost" data-vip="${v.id}" style="margin-top:6px;font-size:12px">【試作】登録済みとしてVIPパスを表示</button>`}
+    </div></div>`;
+  }).join("");
+  document.querySelectorAll("[data-vip]").forEach(b=>b.onclick=()=>{
+    const reg = store.get("vip_"+me.id, {});
+    reg[b.dataset.vip] = {doc:true};
+    store.set("vip_"+me.id, reg); renderVips();
+  });
 }
 function renderSpecials(){
   const joined = store.get("joined_"+me.id, []);
   $("specials").innerHTML = SPECIALS.map(s=>{
-    const j = joined.includes(s.id);
-    return `<div class="event"><div class="date">${s.d}</div><div style="flex:1">
-      <b>${s.t}</b><span class="badge">メンバー限定</span><br><span class="muted">${s.body}（${s.cap}）</span><br>
-      <button ${j?'class="ghost" disabled':''} data-sp="${s.id}" style="margin-top:6px;padding:6px 14px;font-size:13px">${j?"申込済み ✓":"参加を申し込む"}</button>
+    const j = joined.includes(s.id), locked = s.needMods && !modsDone();
+    const btn = locked ? `<span class="muted" style="font-size:12px">🔒 3モジュール修了者限定</span>`
+      : applyBtn(s.id, s.d+"「"+s.t+"」", "infoCloudで申し込む");
+    return `<div class="event ${locked?"lock":""}"><div class="date">${s.d}</div><div style="flex:1">
+      <b>${s.t}</b><span class="badge">メンバー限定</span><br><span class="muted">${s.body}</span><br>${btn}
     </div></div>`;
   }).join("");
-  document.querySelectorAll("[data-sp]").forEach(b=>b.onclick=()=>{
-    const list = store.get("joined_"+me.id, []);
-    if(!list.includes(b.dataset.sp)){ list.push(b.dataset.sp); store.set("joined_"+me.id, list) }
-    renderSpecials();
-  });
+
 }
 function renderWorks(){
   const list = store.get("works_"+me.id, []);
   $("works").innerHTML = list.length ? list.map(w=>
-    `<div class="work"><img src="${w.img}" alt=""><div>${w.date}<br>${escapeHtml(w.memo)}</div></div>`).join("")
+    `<div class="work"><img src="${w.img}" alt=""><div>${w.date}${w.mod?`<br><b>${escapeHtml(w.mod)}</b>`:""}<br>${escapeHtml(w.memo)}</div></div>`).join("")
     : '<p class="muted">まだ記録はありません。</p>';
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])) }
@@ -314,18 +445,18 @@ function useQr(code){
   const used = store.get("codes_"+me.id, []);
   if(used.includes(code)){ msg.textContent = "このイベントのスタンプは、もう押してあります。"; return }
   used.push(code); store.set("codes_"+me.id, used);
-  store.set("visits_"+me.id, store.get("visits_"+me.id,0)+1);
-  me.visits++; render();
+  if(me.att.includes(ev.mod)){ msg.textContent = "このモジュールのスタンプは、もう押してあります。"; return }
+  const extra = store.get("att_"+me.id, []); extra.push(ev.mod); store.set("att_"+me.id, extra);
+  me.att.push(ev.mod); me.mods = me.att.filter(a=>MODS.some(m=>m.id===a)); me.visits = me.att.length; render();
   msg.style.color = "var(--accent)";
-  msg.textContent = `「${ev.name}」のスタンプを押しました！ ご来校ありがとうございました。`;
+  msg.textContent = `${ev.name}のスタンプを押しました！ 参加ありがとうございました。`;
   $("s-stamp").scrollIntoView({behavior:"smooth"});
 }
 function renderQr(){
   const ev = OC_EVENTS[0], url = location.href.split("?")[0].split("#")[0]+"?qr="+ev.code;
   $("qrInfo").textContent = `${ev.name}　有効時間：${hm(ev.from)}〜${hm(ev.to)}`;
   $("qrBox").innerHTML = "";
-  if(window.QRCode) new QRCode($("qrBox"), {text:url, width:180, height:180});
-  else $("qrBox").textContent = "（QR画像を表示できませんでした）";
+  try{ if(window.QRCode) new QRCode($("qrBox"), {text:url, width:180, height:180}) }catch(e){ $("qrBox").textContent = "（QR画像を表示できませんでした）" }
 }
 $("qrTest").onclick = ()=>useQr(OC_EVENTS[0].code);
 $("qrOld").onclick = ()=>useQr(OC_EVENTS[1].code);
@@ -345,18 +476,48 @@ $("wBtn").onclick = ()=>{
     c.width = img.width*Math.min(1,s); c.height = img.height*Math.min(1,s);
     c.getContext("2d").drawImage(img,0,0,c.width,c.height);
     const list = store.get("works_"+me.id, []);
-    list.unshift({img:c.toDataURL("image/jpeg",.7), memo:$("wmemo").value, date:new Date().toLocaleDateString("ja-JP")});
+    list.unshift({img:c.toDataURL("image/jpeg",.7), mod:$("wmod").value, memo:$("wmemo").value, date:new Date().toLocaleDateString("ja-JP")});
     if(!store.set("works_"+me.id, list)) alert("保存できませんでした（容量がいっぱいの可能性があります）");
     $("wfile").value=""; $("wmemo").value=""; renderWorks();
   };
   reader.readAsDataURL(f);
 };
 
-$("logout").onclick = ()=>{ try{ localStorage.removeItem("session") }catch(e){} location.reload() };
+document.addEventListener("click", e=>{
+  if(e.target.closest(".friendBtn")){
+    if(INFOCLOUD.friend) window.open(INFOCLOUD.friend, "_blank", "noopener");
+    else alert("【試作】ここで infoCloud の「友人紹介」フォームが開きます。");
+    return;
+  }
+  if(e.target.closest(".entryBtn")){
+    if(INFOCLOUD.entry) window.open(INFOCLOUD.entry, "_blank", "noopener");
+    else alert("【試作】ここで infoCloud の「Pre-Academy 参加申込」フォームが開きます。");
+    return;
+  }
+  const b = e.target.closest("[data-apply]"); if(b) openApply(b.dataset.apply, b.dataset.label);
+});
+$("pfBtn").onclick = ()=>{
+  if(!store.get("works_"+me.id, []).length){ alert("先に作品の写真を記録してください"); return }
+  store.set("pf_"+me.id, new Date().toLocaleDateString("ja-JP")); renderProg();
+};
+
+$("logout").onclick =()=>location.reload();
 
 // ===== ホーム画面に追加 =====
 let installEvt = null;
 window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); installEvt = e; $("a2hsBtn").classList.remove("hidden") });
+// ===== 今回表示する画面（ここに書いたidだけを表示。全部出すときは SHOW_ONLY = null にする） =====
+const SHOW_ONLY = ["s-prog"];
+function applyShowOnly(){
+  if(!SHOW_ONLY) return;
+  document.querySelectorAll("#home > section, #home > nav").forEach(el=>{
+    if(!SHOW_ONLY.includes(el.id)) el.style.display = "none";
+  });
+  $("progName").textContent = me.name+" さんの";
+}
+const _login3 = login;
+login = id=>{ _login3(id); applyShowOnly() };
+
 function showA2hs(){
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
   if(standalone || store.get("a2hsClosed", false)) return;
@@ -372,8 +533,8 @@ const _login2 = login;
 login = id=>{ _login2(id); showA2hs() };
 
 if(pendingQr) $("err").textContent = "スタンプを押すには、ログインしてください。";
-const saved = store.get("session", null);
-if(saved && MEMBERS[saved]) login(saved);
+// 毎回ログインを求める（ログイン状態は保存しない。以前の版で保存された状態も消す）
+try{ localStorage.removeItem("session") }catch(e){}
 </script>
 </body>
 </html>
